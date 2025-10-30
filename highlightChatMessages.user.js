@@ -177,6 +177,8 @@
             if (colors[color] === rowValues[1]) {
                 option.selected = true;
                 isPredefinedColor = true;
+                selectElement.style.backgroundColor = rowValues[1];
+                selectElement.style.color = getContrastColor(rowValues[1]);
             }
             selectElement.appendChild(option);
         }
@@ -187,6 +189,8 @@
             customOption.selected = true;
             colorPicker.style.display = 'flex';
             selectElement.style.flex = '1 1 calc(20% - 0.5rem)';
+            selectElement.style.backgroundColor = 'white';
+            selectElement.style.color = 'black';
         }
         selectElement.appendChild(customOption);
 
@@ -194,9 +198,13 @@
             if (selectElement.value === 'Custom') {
                 colorPicker.style.display = 'flex';
                 selectElement.style.flex = '1 1 calc(20% - 0.5rem)';
+                selectElement.style.backgroundColor = 'white';
+                selectElement.style.color = 'black';
             } else {
                 colorPicker.style.display = 'none';
                 selectElement.style.flex = '1 1 calc(40% - 0.5rem)';
+                selectElement.style.backgroundColor = selectElement.value;
+                selectElement.style.color = getContrastColor(selectElement.value);
             }
         });
 
