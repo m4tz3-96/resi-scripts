@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Highlight chat messages
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Highlights messages in chat that contain user specified keywords (standard is the username).
 // @author       M4tz3
 // @match        https://rettungssimulator.online/
@@ -9,6 +9,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=rettungssimulator.online
 // @updateURL    https://raw.githubusercontent.com/m4tz3-96/resi-scripts/main/highlightChatMessages.user.js
 // @downloadURL  https://raw.githubusercontent.com/m4tz3-96/resi-scripts/main/highlightChatMessages.user.js
+// @require      https://jscolor.com/releases/2.4.5/jscolor.js
 // @grant        none
 // ==/UserScript==
 
@@ -67,19 +68,21 @@
         }
 
         #highlightMessagesSettingsGrid div input[type=text] {
-        flex: 1 1 calc(40% - 0.5rem);
+            flex: 1 1 calc(40% - 0.5rem);
         }
 
         #highlightMessagesSettingsGrid div select {
-        flex: 1 1 calc(25% - 0.5rem);
+            flex: 1 1 calc(20% - 0.5rem);
         }
 
-        #highlightMessagesSettingsGrid div input[type=color] {
-        flex: 1 1 calc(15% - 0.5rem);
+        #highlightMessagesSettingsGrid div .jscolor {
+            flex: 1 1 calc(20% - 0.5rem);
+            min-width: calc(20% - 0.5rem);
+            max-width: calc(20% - 0.5rem);
         }
 
         #highlightMessagesSettingsGrid div button {
-        flex: 1 1 calc(20% - 0.5rem);
+            flex: 1 1 calc(20% - 0.5rem);
         }
 
         @media (max-width: 768px) {
@@ -95,6 +98,12 @@
 
             #highlightMessagesSettingsGrid div * {
                 flex: 1 1 100%;
+            }
+
+            #highlightMessagesSettingsGrid div .jscolor {
+                flex: 1 1 100%;
+                min-width: 100%;
+                max-width: 100%;
             }
         }
     `;
@@ -152,9 +161,10 @@
 
         // color picker for costum color
         const colorPicker = document.createElement('input');
-        colorPicker.type = 'color';
+        colorPicker.classList.add('jscolor');
         colorPicker.value = rowValues[1];
         colorPicker.style.display = 'none';
+        new jscolor(colorPicker);
 
         // select for predefined colors
         const selectElement = document.createElement('select');
@@ -176,14 +186,14 @@
         if (!isPredefinedColor) {
             customOption.selected = true;
             colorPicker.style.display = 'flex';
-            selectElement.style.flex = '1 1 calc(25% - 0.5rem)';
+            selectElement.style.flex = '1 1 calc(20% - 0.5rem)';
         }
         selectElement.appendChild(customOption);
 
         selectElement.addEventListener('change', function () {
             if (selectElement.value === 'Custom') {
                 colorPicker.style.display = 'flex';
-                selectElement.style.flex = '1 1 calc(25% - 0.5rem)';
+                selectElement.style.flex = '1 1 calc(20% - 0.5rem)';
             } else {
                 colorPicker.style.display = 'none';
                 selectElement.style.flex = '1 1 calc(40% - 0.5rem)';
@@ -241,7 +251,7 @@
             let color = selectElement.value;
 
             if (color === 'Custom') {
-                color = row.querySelector('input[type=color]').value;
+                color = row.getElementsByClassName('jscolor')[0].value;
             }
 
             if (keyword) {
