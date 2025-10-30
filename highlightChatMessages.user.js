@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Highlight chat messages
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Highlights messages in chat that contain user specified keywords (standard is the username).
 // @author       M4tz3
 // @match        https://rettungssimulator.online/
