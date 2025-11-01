@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Highlight chat messages
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      1.0
 // @description  Highlights messages in chat that contain user specified keywords (standard is the username).
 // @author       M4tz3
 // @match        https://rettungssimulator.online/
@@ -127,7 +127,7 @@
                         return response.json();
                     })
                     .then(user => {
-                        keywords = [[user.userName, colors.red]];
+                        keywords = [[user.userName.toLocaleLowerCase(), colors.red]];
                         localStorage.setItem('resiDMKeywords', JSON.stringify(keywords));
                         resolve();
                     })
@@ -253,7 +253,7 @@
 
         for (const row of rows) {
             const textInput = row.querySelector('input');
-            const keyword = textInput.value.trim();
+            const keyword = textInput.value.trim().toLocaleLowerCase();
 
             const selectElement = row.querySelector('select');
             let color = selectElement.value;
@@ -340,13 +340,14 @@
     function highlightSingleMessage(messageNode) {
         const messageText = messageNode.getElementsByClassName('message-content')[0].textContent;
 
-        keywords.forEach(function (keyword) {
-            if (messageText.includes(keyword[0])) {
+        for (const keyword of keywords) {
+            if (messageText.toLocaleLowerCase().includes(keyword[0])) {
                 messageNode.classList.add("highlight");
                 messageNode.style.setProperty('--highlight-color', keyword[1]);
                 messageNode.style.setProperty('--highlight-color-text', getContrastColor(keyword[1]));
+                break;
             }
-        });
+        }
     }
 
     /**
